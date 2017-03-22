@@ -28,7 +28,10 @@ char		*get_octal_str(t_saver *saver, va_list arg)
 	else
 		final = str;
 	if (unsigned_nbr == 0 && saver->precision == 0 && saver->hash != '#')
+	{
+		free(final);
 		final = ft_strdup("");
+	}
 	final = add_precision(saver, final);
 	final = add_min_width(saver, final);
 	return (final);

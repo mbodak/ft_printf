@@ -58,14 +58,16 @@ void					print_number(t_saver *saver, va_list arg)
 {
 	char	*str;
 
-	str = ft_strdup("");
 	if (saver->specifier == 'd' || saver->specifier == 'i')
 		str = get_decimal_str(saver, arg);
-	if (saver->specifier == 'u')
+	else if (saver->specifier == 'u')
 		str = get_uns_decimal_str(saver, arg);
-	if (saver->specifier == 'o')
+	else if (saver->specifier == 'o')
 		str = get_octal_str(saver, arg);
-	if (saver->specifier == 'x' || saver->specifier == 'X')
+	else if (saver->specifier == 'x' || saver->specifier == 'X')
 		str = get_hex_str(saver, arg);
+	else
+		str = ft_strdup("");
 	ft_put_string(str);
+	free(str);
 }

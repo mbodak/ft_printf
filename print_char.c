@@ -32,6 +32,8 @@ void 	char_width(char c, t_saver *saver)
 		if (saver->minus_null != '-')
 			ft_put_char(c);
 	}
+	else
+		ft_put_char(c);
 }
 
 void 	print_char(t_saver *saver, va_list arg)

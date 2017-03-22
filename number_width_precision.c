@@ -12,48 +12,35 @@
 
 #include "ft_printf.h"
 
-char		*add_min_width(t_saver *saver, char *str)
+char			*ft_join(char *str1, char *str2, t_del string)
 {
-	char		*tmp;
-	char		*res;
-	int			i;
+	char	*final;
+	size_t	i;
+	size_t	j;
 
-	if ((saver->width > 0) && (saver->width > (int)ft_strlen(str)))
+	if (!str1 || !str2)
+		return (0);
+	if (!(final = (char *)malloc(sizeof(char) * (ft_strlen(str1)
+												 + ft_strlen(str2) + 1))))
+		return (0);
+	i = 0;
+	while (str1[i])
 	{
-		i = 0;
-		saver->width = saver->width - (int)ft_strlen(str);
-		tmp = ft_strnew((size_t)saver->width + 1);
-		while (i < saver->width)
-		{
-			if (saver->minus_null == '0' && saver->precision < 0)
-				tmp[i] = '0';
-			else
-				tmp[i] = ' ';
-			i++;
-		}
-		tmp[i] = '\0';
-		if (saver->minus_null == '0')
-		{
-			if (str[1] == 'x')
-				str = ft_strjoin(ft_strjoin("0x", tmp), str + 2);
-			else if (str[1] == 'X')
-				str = ft_strjoin(ft_strjoin("0X", tmp), str + 2);
-			else
-				str = ft_strjoin(tmp, str);
-			res = ft_strdup(str);
-		}
-		else if (saver->minus_null == '-')
-			res = ft_strjoin(str, tmp);
-		else
-			res = ft_strjoin(tmp, str);
-		free(tmp);
-		free(str);
-		return (res);
+		final[i] = str1[i];
+		i++;
 	}
-	return (str);
+	j = 0;
+	while (str2[j])
+		final[i++] = str2[j++];
+	final[i] = '\0';
+	if (string == BOTH || string == FIRST)
+		free(str1);
+	if (string == BOTH || string == SECOND)
+		free(str2);
+	return (final);
 }
 
-char		*add_precision(t_saver *saver, char *str)
+char			*add_precision(t_saver *saver, char *str)
 {
 	char 		*tmp;
 	char		*res;
@@ -75,13 +62,79 @@ char		*add_precision(t_saver *saver, char *str)
 			tmp[i++] = '0';
 		tmp[i] = '\0';
 		if (str[0] == '-')
-			res = ft_strjoin(ft_strjoin("-", tmp), str + 1);
+			res = ft_join(ft_strjoin("-", tmp), str + 1, FIRST);
 		else if (saver->specifier == 'o' && saver->hash == '#')
 			res = ft_strjoin(tmp, str + 1);
 		else if (str[1] == 'x')
-			res = ft_strjoin(ft_strjoin("0x", tmp), str + 2);
+			res = ft_join(ft_strjoin("0x", tmp), str + 2, FIRST);
 		else if (str[1] == 'X')
-			res = ft_strjoin(ft_strjoin("0X", tmp), str + 2);
+			res = ft_join(ft_strjoin("0X", tmp), str + 2, FIRST);
+		else
+			res = ft_strjoin(tmp, str);
+		free(tmp);
+		free(str);
+		return (res);
+	}
+	return (str);
+}
+
+char			*add_flags(t_saver *saver, char *str)
+{
+	char		*res;
+
+	if (saver->plus_space == '+' && !ft_strchr(str, '-'))
+	{
+		res = ft_strjoin("+", str);
+		free(str);
+	}
+	else if (saver->plus_space == ' ' && !ft_strchr(str, '-'))
+	{
+		res = ft_strjoin(" ", str);
+		free(str);
+	}
+	else
+		res = str;
+	return (res);
+}
+
+static char		*check_flag_null(char *str, char *tmp)
+{
+	char	*res;
+
+	if (str[0] == ' ')
+		res = ft_join(ft_strjoin(" ", tmp), str + 1, FIRST);
+	else if (str[0] == '-')
+		res = ft_join(ft_strjoin("-", tmp), str + 1, FIRST);
+	else if (str[0] == '+')
+		res = ft_join(ft_strjoin("+", tmp), str + 1, FIRST);
+	else if (str[1] == 'x')
+		res = ft_join(ft_strjoin("0x", tmp), str + 2, FIRST);
+	else if (str[1] == 'X')
+		res = ft_join(ft_strjoin("0X", tmp), str + 2, FIRST);
+	else
+		res = ft_strjoin(tmp, str);
+	return (res);
+}
+
+char		*add_min_width(t_saver *saver, char *str)
+{
+	char		*tmp;
+	char		*res;
+	int			i;
+
+	if ((saver->width > 0) && (saver->width > (int)ft_strlen(str)))
+	{
+		i = 0;
+		saver->width = saver->width - (int)ft_strlen(str);
+		tmp = ft_strnew((size_t)saver->width);
+		if (saver->minus_null == '0' && saver->precision < 0)
+			tmp = ft_memset(tmp, '0', (size_t)saver->width);
+		else
+			tmp = ft_memset(tmp, ' ', (size_t)saver->width);
+		if (saver->minus_null == '0')
+			res = check_flag_null(str, tmp);
+		else if (saver->minus_null == '-')
+			res = ft_strjoin(str, tmp);
 		else
 			res = ft_strjoin(tmp, str);
 		free(tmp);

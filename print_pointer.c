@@ -22,10 +22,12 @@ static char		*get_pointer_str(t_saver *saver, va_list arg)
 	str = ft_utoa_base(unsigned_nbr, 16);
 	str = ft_lower(str);
 	final = ft_strjoin("0x", str);
-	(void *)saver;
 	free(str);
 	if (unsigned_nbr == 0 && saver->precision == 0)
+	{
+		free(final);
 		final = ft_strdup("0x");
+	}
 	final = add_precision(saver, final);
 	final = add_min_width(saver, final);
 	return (final);
@@ -35,8 +37,7 @@ void			print_pointer(t_saver *saver, va_list arg)
 {
 	char	*str;
 
-	str = ft_strdup("");
-	if (saver->specifier == 'p')
-		str = get_pointer_str(saver, arg);
+	str = get_pointer_str(saver, arg);
 	ft_put_string(str);
+	free(str);
 }

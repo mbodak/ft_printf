@@ -41,7 +41,8 @@ size_t		parse_it(const char *format, size_t  i, t_saver *saver)
 		i = parse_prec(format, i, saver);
 		i = parse_size(format, i, saver);
 	}
-	i = parse_specif(format, i, saver);
+	if (format[i])
+		i = parse_specif(format, i, saver);
 	return (i);
 }
 
@@ -70,6 +71,8 @@ int			run_format(const char *format, va_list arg)
 		{
 			saver = create_struct();
 			i = parse_it(format, i + 1, saver);
+			if (format[i] == '\0')
+				break ;
 			arg_print(saver, arg);
 			free(saver);
 		}

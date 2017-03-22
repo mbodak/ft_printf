@@ -20,6 +20,13 @@
 
 size_t				g_count;
 
+typedef enum		e_del
+{
+	FIRST,
+	SECOND,
+	BOTH
+}					t_del;
+
 typedef enum		e_size
 {
 	DEF,
@@ -58,14 +65,16 @@ size_t				parse_size(const char *format, size_t  i, t_saver *saver);
 size_t				parse_specif(const char *format, size_t  i, t_saver *saver);
 size_t				parse_it(const char *format, size_t  i, t_saver *saver);
 char				*convert_wstrtostr(wchar_t *str, int max_len);
+char				*ft_join(char *str1, char *str2, t_del string);
 long long			get_number_arg(t_saver *saver, va_list arg);
 unsigned long long 	get_unsigned_number_arg(t_saver *saver, va_list arg);
+char				*add_precision(t_saver *saver, char *str);
+char				*add_flags(t_saver *saver, char *str);
+char				*add_min_width(t_saver *saver, char *str);
 char				*get_decimal_str(t_saver *saver, va_list arg);
 char				*get_uns_decimal_str(t_saver *saver, va_list arg);
 char				*get_octal_str(t_saver *saver, va_list arg);
 char				*get_hex_str(t_saver *saver, va_list arg);
-char				*add_min_width(t_saver *saver, char *str);
-char				*add_precision(t_saver *saver, char *str);
 void				print_char(t_saver *saver, va_list arg);
 void				print_string(t_saver *saver, va_list arg);
 void				print_number(t_saver *saver, va_list arg);

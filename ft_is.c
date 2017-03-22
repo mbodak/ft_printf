@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int 	is_flag(const char *string, size_t i)
+int			is_flag(const char *string, size_t i)
 {
 	if (string[i] == '+')
 		return (1);
@@ -27,7 +27,7 @@ int 	is_flag(const char *string, size_t i)
 	return (0);
 }
 
-int 	is_size(const char *string, size_t i)
+int			is_size(const char *string, size_t i)
 {
 	if (string[i] == 'h' && string[i + 1] == 'h')
 		return (2);
@@ -44,7 +44,7 @@ int 	is_size(const char *string, size_t i)
 	return (0);
 }
 
-t_size	get_size(const char *string, size_t i)
+t_size		get_size(const char *string, size_t i)
 {
 	if (string[i] == 'h' && string[i + 1] == 'h')
 		return (HH);

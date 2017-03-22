@@ -32,9 +32,9 @@ static char		*str_width(char *str, t_saver *saver)
 		}
 		tmp[i] = '\0';
 		if (saver->minus_null == '-')
-			str = ft_strjoin(str, tmp);
+			str = ft_join(str, tmp, FIRST);
 		else
-			str = ft_strjoin(tmp, str);
+			str = ft_join(tmp, str, SECOND);
 		free(tmp);
 	}
 	return (str);
@@ -43,7 +43,7 @@ static char		*str_width(char *str, t_saver *saver)
 static char		*str_precision(char *str, t_saver *saver)
 {
 	char 	*res;
-	size_t	i;
+	int		i;
 
 	if ((saver->precision >= 0) && (saver->precision < (int)ft_strlen(str)))
 	{
@@ -67,8 +67,15 @@ void			print_string(t_saver *saver, va_list arg)
 	if (saver->size == L)
 		str = convert_wstrtostr(va_arg(arg, wchar_t *), saver->precision);
 	else
+	{
 		str = va_arg(arg, char *);
+		if (!str)
+			str = ft_strdup("(null)");
+		else
+			str = ft_strdup(str);
+	}
 	str = str_precision(str, saver);
 	str = str_width(str, saver);
 	ft_put_string(str);
+	free(str);
 }
