@@ -16,9 +16,9 @@ char		*add_min_width(t_saver *saver, char *str)
 {
 	char		*tmp;
 	char		*res;
-	size_t		i;
+	int			i;
 
-	if ((saver->width > 0) && (saver->width > ft_strlen(str)))
+	if ((saver->width > 0) && (saver->width > (int)ft_strlen(str)))
 	{
 		i = 0;
 		saver->width = saver->width - (int)ft_strlen(str);

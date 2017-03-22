@@ -52,14 +52,14 @@ char			*convert_wstrtostr(wchar_t *str, int max_len)
 	if (!str)
 		return (ft_strdup("(null)"));
 	size = 0;
-	str = ft_strdup("");
+	final = ft_strdup("");
 	while (str[size])
 	{
 		tmp = final;
 		wint_tmp = convert_winttostr(str[size]);
 		final = ft_strjoin(final, wint_tmp);
 		free(wint_tmp);
-		if (max_len >= 0 && (int)ft_strlen(str) > max_len)
+		if (max_len >= 0 && (int)ft_strlen(final) > max_len)
 		{
 			free(final);
 			final = tmp;

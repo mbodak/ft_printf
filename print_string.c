@@ -15,9 +15,9 @@
 static char		*str_width(char *str, t_saver *saver)
 {
 	char 	*tmp;
-	size_t	i;
+	int		i;
 
-	if ((saver->width > 0) && (saver->width > ft_strlen(str)))
+	if ((saver->width > 0) && (saver->width > (int)ft_strlen(str)))
 	{
 		saver->width = saver->width - (int)ft_strlen(str);
 		tmp = ft_strnew((size_t)saver->width);
@@ -45,7 +45,7 @@ static char		*str_precision(char *str, t_saver *saver)
 	char 	*res;
 	size_t	i;
 
-	if ((saver->precision >= 0) && (saver->precision < ft_strlen(str)))
+	if ((saver->precision >= 0) && (saver->precision < (int)ft_strlen(str)))
 	{
 		i = 0;
 		res = ft_strnew((size_t)saver->precision);
