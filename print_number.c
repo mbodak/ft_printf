@@ -66,6 +66,8 @@ void					print_number(t_saver *saver, va_list arg)
 		str = get_octal_str(saver, arg);
 	else if (saver->specifier == 'x' || saver->specifier == 'X')
 		str = get_hex_str(saver, arg);
+	else if (saver->specifier == 'b')
+		str = get_binary_str(saver, arg);
 	else
 		str = ft_strdup("");
 	ft_put_string(str);

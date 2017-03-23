@@ -13,7 +13,10 @@
 NAME 	= libftprintf.a
 GCC		= gcc
 FLAG	= -Wall -Wextra -Werror
-SRC		= *.c
+SRC		= convert_to_str.c ft_addit.c ft_is.c ft_parse.c get_decimal_str.c  \
+          get_hex_str.c get_octal_str.c number_width_precision.c            \
+          get_binary_str.c print_char.c print_number.c print_pointer.c      \
+          print_string.c ft_printf.c
 OBJ		= $(SRC:.c=.o)
 
 all: $(NAME)

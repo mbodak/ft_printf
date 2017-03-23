@@ -24,11 +24,8 @@ char		*get_decimal_str(t_saver *saver, va_list arg)
 	if (nbr < 0 && (minus = 1))
 		nbr *= -1;
 	str = ft_utoa_base((unsigned long long)nbr, 10);
-	if (minus == 1 && str[0] != '-')
-	{
-		final = ft_strjoin("-", str);
-		free(str);
-	}
+	if (minus == 1)
+		final = ft_join("-", str, SECOND);
 	else
 		final = str;
 	if (nbr == 0 && saver->precision == 0)

@@ -12,46 +12,37 @@
 
 #include "ft_printf.h"
 
-char			*ft_join(char *str1, char *str2, t_del string)
+static char		*check_start_str(t_saver *saver, char *str, char *tmp)
 {
-	char	*final;
-	size_t	i;
-	size_t	j;
+	char	*res;
 
-	if (!str1 || !str2)
-		return (0);
-	if (!(final = (char *)malloc(sizeof(char) * (ft_strlen(str1)
-												 + ft_strlen(str2) + 1))))
-		return (0);
-	i = 0;
-	while (str1[i])
-	{
-		final[i] = str1[i];
-		i++;
-	}
-	j = 0;
-	while (str2[j])
-		final[i++] = str2[j++];
-	final[i] = '\0';
-	if (string == BOTH || string == FIRST)
-		free(str1);
-	if (string == BOTH || string == SECOND)
-		free(str2);
-	return (final);
+	if (str[0] == '-')
+		res = ft_join(ft_strjoin("-", tmp), str + 1, FIRST);
+	else if (saver->specifier == 'o' && saver->hash == '#')
+		res = ft_strjoin(tmp, str + 1);
+	else if (str[1] == 'x')
+		res = ft_join(ft_strjoin("0x", tmp), str + 2, FIRST);
+	else if (str[1] == 'X')
+		res = ft_join(ft_strjoin("0X", tmp), str + 2, FIRST);
+	else if (str[1] == 'b')
+		res = ft_join(ft_strjoin("0b", tmp), str + 2, FIRST);
+	else
+		res = ft_strjoin(tmp, str);
+	return (res);
 }
 
 char			*add_precision(t_saver *saver, char *str)
 {
-	char 		*tmp;
-	char		*res;
-	size_t		len;
-	size_t		size;
-	size_t		i;
+	char	*tmp;
+	char	*res;
+	size_t	len;
+	size_t	size;
+	size_t	i;
 
 	len = ft_strlen(str);
 	if (str[0] == '-' || (saver->specifier == 'o' && saver->hash == '#'))
 		len = ft_strlen(str) - 1;
-	else if (str[1] == 'x' || str[1] == 'X')
+	else if (str[1] == 'x' || str[1] == 'X' || str[1] == 'b')
 		len = ft_strlen(str) - 2;
 	if (saver->precision > (int)len)
 	{
@@ -61,16 +52,7 @@ char			*add_precision(t_saver *saver, char *str)
 		while (i < size)
 			tmp[i++] = '0';
 		tmp[i] = '\0';
-		if (str[0] == '-')
-			res = ft_join(ft_strjoin("-", tmp), str + 1, FIRST);
-		else if (saver->specifier == 'o' && saver->hash == '#')
-			res = ft_strjoin(tmp, str + 1);
-		else if (str[1] == 'x')
-			res = ft_join(ft_strjoin("0x", tmp), str + 2, FIRST);
-		else if (str[1] == 'X')
-			res = ft_join(ft_strjoin("0X", tmp), str + 2, FIRST);
-		else
-			res = ft_strjoin(tmp, str);
+		res = check_start_str(saver, str, tmp);
 		free(tmp);
 		free(str);
 		return (res);
@@ -80,7 +62,7 @@ char			*add_precision(t_saver *saver, char *str)
 
 char			*add_flags(t_saver *saver, char *str)
 {
-	char		*res;
+	char	*res;
 
 	if (saver->plus_space == '+' && !ft_strchr(str, '-'))
 	{
@@ -111,20 +93,20 @@ static char		*check_flag_null(char *str, char *tmp)
 		res = ft_join(ft_strjoin("0x", tmp), str + 2, FIRST);
 	else if (str[1] == 'X')
 		res = ft_join(ft_strjoin("0X", tmp), str + 2, FIRST);
+	else if (str[1] == 'b')
+		res = ft_join(ft_strjoin("0b", tmp), str + 2, FIRST);
 	else
 		res = ft_strjoin(tmp, str);
 	return (res);
 }
 
-char		*add_min_width(t_saver *saver, char *str)
+char			*add_min_width(t_saver *saver, char *str)
 {
-	char		*tmp;
-	char		*res;
-	int			i;
+	char	*tmp;
+	char	*res;
 
 	if ((saver->width > 0) && (saver->width > (int)ft_strlen(str)))
 	{
-		i = 0;
 		saver->width = saver->width - (int)ft_strlen(str);
 		tmp = ft_strnew((size_t)saver->width);
 		if (saver->minus_null == '0' && saver->precision < 0)

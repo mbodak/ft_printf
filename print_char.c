@@ -12,9 +12,9 @@
 
 #include "ft_printf.h"
 
-void 	char_width(char c, t_saver *saver)
+void	char_width(char c, t_saver *saver)
 {
-	int 	tmp;
+	int		tmp;
 
 	if (saver->width > 1)
 	{
@@ -36,9 +36,9 @@ void 	char_width(char c, t_saver *saver)
 		ft_put_char(c);
 }
 
-void 	print_char(t_saver *saver, va_list arg)
+void	print_char(t_saver *saver, va_list arg)
 {
-	char 	c;
+	char	c;
 
 	if (saver->specifier == 'c' && saver->size == L)
 		c = (char)va_arg(arg, wint_t);

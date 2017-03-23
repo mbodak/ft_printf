@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-size_t		parse_flags(const char *format, size_t  i, t_saver *saver)
+size_t		parse_flags(const char *format, size_t i, t_saver *saver)
 {
 	while (is_flag(format, i))
 	{
@@ -37,30 +37,49 @@ size_t		parse_flags(const char *format, size_t  i, t_saver *saver)
 	return (i);
 }
 
-size_t		parse_width(const char *format, size_t  i, t_saver *saver)
+size_t		parse_width(const char *format, size_t i, t_saver *saver, va_list a)
 {
 	if (ft_isdigit(format[i]))
+	{
 		saver->width = ft_atoi(format + i);
-	while (ft_isdigit(format[i]))
+		while (ft_isdigit(format[i]))
+			i++;
+	}
+	else if (format[i] == '*')
+	{
+		saver->width = va_arg(a, int);
+		if (saver->width < 0)
+		{
+			saver->width *= -1;
+			saver->minus_null = '-';
+		}
 		i++;
+	}
 	return (i);
 }
 
-size_t		parse_prec(const char *format, size_t i, t_saver *saver)
+size_t		parse_prec(const char *format, size_t i, t_saver *saver, va_list a)
 {
 	if (format[i] == '.')
 	{
 		i++;
 		saver->precision = 0;
 		if (ft_isdigit(format[i]))
+		{
 			saver->precision = ft_atoi(format + i);
-		while (ft_isdigit(format[i]))
+			while (ft_isdigit(format[i]))
+				i++;
+		}
+		else if (format[i] == '*')
+		{
+			saver->precision = va_arg(a, int);
 			i++;
+		}
 	}
 	return (i);
 }
 
-size_t		parse_size(const char *format, size_t  i, t_saver *saver)
+size_t		parse_size(const char *format, size_t i, t_saver *saver)
 {
 	t_size	size;
 
@@ -74,7 +93,7 @@ size_t		parse_size(const char *format, size_t  i, t_saver *saver)
 	return (i);
 }
 
-size_t		parse_specif(const char *format, size_t  i, t_saver *saver)
+size_t		parse_specif(const char *format, size_t i, t_saver *saver)
 {
 	char c;
 
@@ -87,4 +106,3 @@ size_t		parse_specif(const char *format, size_t  i, t_saver *saver)
 	saver->specifier = c;
 	return (i);
 }
-

@@ -17,7 +17,6 @@ t_saver		*create_struct(void)
 	t_saver		*saver;
 
 	saver = (t_saver *)malloc(sizeof(t_saver));
-
 	saver->hash = '\0';
 	saver->minus_null = '\0';
 	saver->plus_space = '\0';
@@ -28,7 +27,7 @@ t_saver		*create_struct(void)
 	return (saver);
 }
 
-size_t		parse_it(const char *format, size_t  i, t_saver *saver)
+size_t		parse_it(const char *format, size_t i, t_saver *saver, va_list a)
 {
 	size_t	tmp;
 
@@ -37,8 +36,8 @@ size_t		parse_it(const char *format, size_t  i, t_saver *saver)
 	{
 		tmp = i;
 		i = parse_flags(format, i, saver);
-		i = parse_width(format, i, saver);
-		i = parse_prec(format, i, saver);
+		i = parse_width(format, i, saver, a);
+		i = parse_prec(format, i, saver, a);
 		i = parse_size(format, i, saver);
 	}
 	if (format[i])
@@ -48,7 +47,7 @@ size_t		parse_it(const char *format, size_t  i, t_saver *saver)
 
 int			arg_print(t_saver *saver, va_list arg)
 {
-	if (ft_strchr("diouxX", saver->specifier))
+	if (ft_strchr("bdiouxX", saver->specifier))
 		print_number(saver, arg);
 	else if (saver->specifier == 'p')
 		print_pointer(saver, arg);
@@ -70,7 +69,7 @@ int			run_format(const char *format, va_list arg)
 		if (format[i] == '%')
 		{
 			saver = create_struct();
-			i = parse_it(format, i + 1, saver);
+			i = parse_it(format, i + 1, saver, arg);
 			if (format[i] == '\0')
 				break ;
 			arg_print(saver, arg);
@@ -85,7 +84,7 @@ int			run_format(const char *format, va_list arg)
 
 int			ft_printf(const char *restrict format, ...)
 {
-	int 		count;
+	int			count;
 	va_list		arg;
 
 	if (!format)

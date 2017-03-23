@@ -12,9 +12,38 @@
 
 #include "ft_printf.h"
 
+char			*ft_join(char *str1, char *str2, t_del string)
+{
+	char	*final;
+	size_t	i;
+	size_t	j;
+	size_t	len;
+
+	len = ft_strlen(str1) + ft_strlen(str2);
+	if (!str1 || !str2)
+		return (0);
+	if (!(final = (char *)malloc(sizeof(char) * (len + 1))))
+		return (0);
+	i = 0;
+	while (str1[i])
+	{
+		final[i] = str1[i];
+		i++;
+	}
+	j = 0;
+	while (str2[j])
+		final[i++] = str2[j++];
+	final[i] = '\0';
+	if (string == BOTH || string == FIRST)
+		free(str1);
+	if (string == BOTH || string == SECOND)
+		free(str2);
+	return (final);
+}
+
 static char		*str_width(char *str, t_saver *saver)
 {
-	char 	*tmp;
+	char	*tmp;
 	int		i;
 
 	if ((saver->width > 0) && (saver->width > (int)ft_strlen(str)))
@@ -42,7 +71,7 @@ static char		*str_width(char *str, t_saver *saver)
 
 static char		*str_precision(char *str, t_saver *saver)
 {
-	char 	*res;
+	char	*res;
 	int		i;
 
 	if ((saver->precision >= 0) && (saver->precision < (int)ft_strlen(str)))
@@ -55,14 +84,14 @@ static char		*str_precision(char *str, t_saver *saver)
 			i++;
 		}
 		res[i] = '\0';
-		return(res);
+		return (res);
 	}
 	return (str);
 }
 
 void			print_string(t_saver *saver, va_list arg)
 {
-	char 	*str;
+	char	*str;
 
 	if (saver->size == L)
 		str = convert_wstrtostr(va_arg(arg, wchar_t *), saver->precision);
